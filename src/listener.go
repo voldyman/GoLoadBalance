@@ -33,7 +33,7 @@ func startServer(listenPort int, backends *Backends) {
 func handleConnection(cli_conn net.Conn, srv_addr string) {
 	srv_conn, err := net.Dial("tcp", srv_addr)
 	if err != nil {
-		fmt.Println("Could not connect to server (%s), connection dropping", srv_addr)
+		fmt.Printf("Could not connect to server (%s), connection dropping\n", srv_addr)
 		return
 	}
 
