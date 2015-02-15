@@ -30,7 +30,7 @@ func (self *Backends) NextAddress() (addess string) {
 	index := self.current
 
 	self.current = self.current + 1
-	if self.current > self.Length {
+	if self.current > self.Length -1 {
 		self.current = 0
 	}
 

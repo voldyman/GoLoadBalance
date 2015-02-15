@@ -10,11 +10,13 @@ import (
 func startServer(listenPort int, backends *Backends) {
 	port := strconv.Itoa(listenPort)
 	fmt.Println("Starting server on port ", port)
+
 	addr, _ := net.ResolveTCPAddr("tcp", ":"+port)
 
 	listener, err := net.ListenTCP("tcp", addr)
 	if err != nil {
-		panic(err)
+		fmt.Println("Could not listen on port because:", err.Error())
+		return
 	}
 
 	for {
@@ -31,7 +33,7 @@ func startServer(listenPort int, backends *Backends) {
 func handleConnection(cli_conn net.Conn, srv_addr string) {
 	srv_conn, err := net.Dial("tcp", srv_addr)
 	if err != nil {
-		fmt.Println("Could not connect to server, connection dropping")
+		fmt.Println("Could not connect to server (%s), connection dropping", srv_addr)
 		return
 	}
 
