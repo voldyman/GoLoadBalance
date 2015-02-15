@@ -21,9 +21,7 @@ func main() {
 
 	backends := NewBackends()
 
-	for _, addr := range backends_input {
-		backends.Add(addr)
-	}
+	backends.Add([]string(backends_input)  ...)
 
 	startServer(*port, backends)
 }
