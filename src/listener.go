@@ -39,4 +39,6 @@ func handleConnection(cli_conn net.Conn, srv_addr string) {
 
 	go io.Copy(cli_conn, srv_conn)
 	io.Copy(srv_conn, cli_conn)
+	srv_conn.Close()
+	cli_conn.Close()
 }
