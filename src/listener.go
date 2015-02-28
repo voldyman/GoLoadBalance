@@ -33,12 +33,16 @@ func startServer(listenPort int, backends *Backends) {
 func handleConnection(cli_conn net.Conn, srv_addr string) {
 	srv_conn, err := net.Dial("tcp", srv_addr)
 	if err != nil {
-		fmt.Sprintf("Could not connect to server (%q), connection dropping\n", srv_addr)
+		fmt.Printf("Could not connect to server (%q), connection dropping\n", srv_addr)
 		return
 	}
 
+	// close the conections when done
+	defer func() {
+		srv_conn.Close()
+		cli_conn.Close()
+	}()
+
 	go io.Copy(cli_conn, srv_conn)
 	io.Copy(srv_conn, cli_conn)
-	srv_conn.Close()
-	cli_conn.Close()
 }
