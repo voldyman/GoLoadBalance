@@ -5,6 +5,7 @@ import (
 	"io"
 	"net"
 	"strconv"
+	"sync"
 )
 
 func startServer(listenPort int, backends *Backends) {
@@ -43,6 +44,16 @@ func handleConnection(cli_conn net.Conn, srv_addr string) {
 		cli_conn.Close()
 	}()
 
-	go io.Copy(cli_conn, srv_conn)
-	io.Copy(srv_conn, cli_conn)
+	wg := &sync.WaitGroup{}
+	wg.Add(2)
+	go copy(srv_conn, cli_conn, wg)
+	go copy(cli_conn, srv_conn, wg)
+	wg.Wait()
+}
+
+func copy(to, from net.Conn, wg *sync.WaitGroup) {
+	defer wg.Done()
+	if _, err := io.Copy(to, from); err != nil {
+		return
+	}
 }
